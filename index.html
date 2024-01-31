@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etch-e-Sketch</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <h1>Etch-e-Sketch</h1>
+    </nav>
+    
+    <div class="container">
+        <div class="buttons-area">
+            <h1></h1>
+            <button id="black">Black</button>
+            <button id="rainbow-btn">Rainbow</button>
+            <button id="eraser">Eraser</button>
+            <button id="reset-btn">Reset</button>
+            <button id="grid" onclick="changeGrid()">Change Grid</button>
+        </div>
+        <div class="container-items"></div>
+        
+    </div>
+    
+    <script>
+        const container = document.querySelector('.container-items');
+        let gridSize = 16;
+        let isRainbowMode = false;
+        let defMode = false;
+
+        const clearBtn = document.querySelector('#reset-btn');
+        const rainbowBtn = document.querySelector('#rainbow-btn');
+        const blackBtn = document.querySelector('#black');
+        const eraserBtn = document.querySelector('#eraser');
+        const gridInputBtn = document.querySelector('#grid');
+
+        function createDivs() {
+            container.innerHTML = '';
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const squareDiv = document.createElement('div');
+                    squareDiv.className = 'square';
+                    container.appendChild(squareDiv);
+                    squareDiv.onmouseover = function () {
+                        maintainColor(squareDiv);
+                    };
+                }
+            }
+        }
+
+        createDivs();
+
+        clearBtn.addEventListener('click', () => {
+            const divs = document.querySelectorAll('.square');
+            clear(divs);
+        });
+
+        rainbowBtn.addEventListener('click', () => {
+            isRainbowMode = true;
+            defMode = false;
+        });
+
+        blackBtn.addEventListener('click', () => {
+            isRainbowMode = false;
+            defMode = true;
+        });
+
+        eraserBtn.addEventListener('click', () => {
+            isRainbowMode = false;
+            defMode = false;
+        });
+
+        gridInputBtn.addEventListener('click', () => {
+            changeGrid();
+        });
+
+        function clear(divs) {
+            divs.forEach(div => {
+                if (isRainbowMode || defMode) {
+                    maintainColor(div);
+                } else {
+                    div.style.backgroundColor = '';
+                }
+            });
+        }
+
+        function maintainColor(element) {
+            if (isRainbowMode || defMode) {
+                rgbNumber(element);
+            } else {
+                element.style.backgroundColor = 'black';
+            }
+        }
+
+        function getRandomNumbers(num) {
+            return Math.floor(Math.random() * (num + 1));
+        }
+
+        function rgbNumber(item) {
+            const randomNums = "rgb(" + getRandomNumbers(255) + "," + getRandomNumbers(255) + "," + getRandomNumbers(255) + ")";
+            item.style.backgroundColor = randomNums;
+        }
+
+        function changeGrid() {
+            let inputSize;
+            do {
+                inputSize = prompt("Enter a new size [min 3, max 100]");
+                if (inputSize == null) {
+                    inputSize = 16;
+                    break;
+                }
+            } while (inputSize > 100 || inputSize < 3);
+
+            gridSize = inputSize;
+
+            container.style.gridTemplateColumns = `repeat(${inputSize}, 1fr)`;
+            createDivs();
+        }
+    </script>
+</body>
+</html>
