@@ -23,8 +23,6 @@
         <button id="eraser">Eraser</button>
         <button id="reset-btn">Reset</button>
         <button id="grid" onclick="changeGrid()">Change Grid</button>
-        <button id="changeDivs" onclick="changeDivSquares()">None</button>
-        <button id="changeDivsBack" onclick="divBorder()">Border</button>
     </div>
 
     <script>
@@ -35,8 +33,7 @@
         const blackBtn = document.querySelector('#black');
         const eraserBtn = document.querySelector('#eraser');
         const gridInputBtn = document.querySelector('#grid');
-        const changeSquaresBtn = document.querySelector('#changeDivs');
-        const borderBtn = document.querySelector('#changeDivsBack');
+    
 
         let gridSize = 16;
         let isRainbowMode = false;
@@ -49,6 +46,7 @@
                     const squareDiv = document.createElement('div');
                     squareDiv.className = 'square';
                     container.appendChild(squareDiv);
+                    
                     squareDiv.onmouseover = function () {
                         if (isRainbowMode) {
                             rgbNumber(squareDiv);
@@ -134,13 +132,7 @@
             isRainbowMode = false; 
         });
 
-        changeSquaresBtn.addEventListener('click', () => {
-            changeDivSquares();
-        });
 
-        borderBtn.addEventListener('click', () => {
-            divBorder();
-        });
     </script>
 </body>
 </html>
