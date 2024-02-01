@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etch-e-Sketch</title>
     <link rel="stylesheet" href="styles.css">
+    <title>Etch-a-Sketch</title>
 </head>
 <body>
     <nav>
-        <h1>Etch-e-Sketch</h1>
+        <h1>Etch-a-Sketch</h1>
     </nav>
     
     <div class="container">
@@ -72,7 +73,7 @@ function maintainColor(element) {
         rgbNumber(element);
     } else if(eraserMode){
         element.style.backgroundColor = 'white';
-    } else {
+    } else if(isRainbowMode){
         element.style.backgroundColor = 'black';
     } 
 }
