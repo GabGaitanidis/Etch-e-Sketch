@@ -12,112 +12,142 @@
     </nav>
     
     <div class="container">
-        <div class="buttons-area">
-            <h1></h1>
-            <button id="black">Black</button>
-            <button id="rainbow-btn">Rainbow</button>
-            <button id="eraser">Eraser</button>
-            <button id="reset-btn">Reset</button>
-            <button id="grid" onclick="changeGrid()">Change Grid</button>
-        </div>
-        <div class="container-items"></div>
-        
-    </div>
-    
+            <div class="container-items"></div>
+    </div>     
+    <div class="buttons-area">
+        <button id="black">Black</button>
+        <button id="rainbow-btn">Rainbow</button>
+        <button id="eraser">Eraser</button>
+        <button id="reset-btn">Reset</button>
+        <button id="grid" onclick="changeGrid()">Change Grid</button>
+        <button id="changeDivs">None</button>
+        <button id="changeDivsBack">Border</button>
+</div>
     <script>
-        const container = document.querySelector('.container-items');
-        let gridSize = 16;
-        let isRainbowMode = false;
-        let defMode = false;
+const container = document.querySelector('.container-items');
+const clearBtn = document.querySelector('#reset-btn');
+const rainbowBtn = document.querySelector('#rainbow-btn');
+const blackBtn = document.querySelector('#black');
+const eraserBtn = document.querySelector('#eraser');
+const gridInputBtn = document.querySelector('#grid');
+const changeSquaresBtn = document.querySelector('#changeDivs')
+const borderBtn = document.querySelector('#changeDivsBack');
 
-        const clearBtn = document.querySelector('#reset-btn');
-        const rainbowBtn = document.querySelector('#rainbow-btn');
-        const blackBtn = document.querySelector('#black');
-        const eraserBtn = document.querySelector('#eraser');
-        const gridInputBtn = document.querySelector('#grid');
+let gridSize = 16;
+let isRainbowMode = false;
+let defMode = false;
+let eraserMode = false;
 
-        function createDivs() {
-            container.innerHTML = '';
-            for (let i = 0; i < gridSize; i++) {
-                for (let j = 0; j < gridSize; j++) {
-                    const squareDiv = document.createElement('div');
-                    squareDiv.className = 'square';
-                    container.appendChild(squareDiv);
-                    squareDiv.onmouseover = function () {
-                        maintainColor(squareDiv);
-                    };
-                }
-            }
+function createDivs() {
+    container.innerHTML = '';
+    for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+            const squareDiv = document.createElement('div');
+            squareDiv.className = 'square';
+            container.appendChild(squareDiv);
+            squareDiv.onmouseover = function () {
+                maintainColor(squareDiv);
+            };
         }
+    }
+}
+createDivs();
 
-        createDivs();
+gridInputBtn.addEventListener('click', () => {
+    changeGrid();
+});
 
-        clearBtn.addEventListener('click', () => {
-            const divs = document.querySelectorAll('.square');
-            clear(divs);
-        });
-
-        rainbowBtn.addEventListener('click', () => {
-            isRainbowMode = true;
-            defMode = false;
-        });
-
-        blackBtn.addEventListener('click', () => {
-            isRainbowMode = false;
-            defMode = true;
-        });
-
-        eraserBtn.addEventListener('click', () => {
-            isRainbowMode = false;
-            defMode = false;
-        });
-
-        gridInputBtn.addEventListener('click', () => {
-            changeGrid();
-        });
-
-        function clear(divs) {
-            divs.forEach(div => {
-                if (isRainbowMode || defMode) {
-                    maintainColor(div);
-                } else {
-                    div.style.backgroundColor = '';
-                }
-            });
+function clear(divs) {
+    divs.forEach(div => {
+        if (isRainbowMode || defMode) {
+            maintainColor(div);
+        } else {
+            div.style.backgroundColor = '';
         }
+    });
+}
 
-        function maintainColor(element) {
-            if (isRainbowMode || defMode) {
-                rgbNumber(element);
-            } else {
-                element.style.backgroundColor = 'black';
-            }
+function maintainColor(element) {
+    if (isRainbowMode || defMode) {
+        rgbNumber(element);
+    } else if(eraserMode){
+        element.style.backgroundColor = 'white';
+    } else {
+        element.style.backgroundColor = 'black';
+    } 
+}
+
+function getRandomNumbers(num) {
+    return Math.floor(Math.random() * (num + 1));
+}
+
+function rgbNumber(item) {
+    const randomNums = "rgb(" + getRandomNumbers(255) + "," + getRandomNumbers(255) + "," + getRandomNumbers(255) + ")";
+    item.style.backgroundColor = randomNums;
+}
+
+function changeGrid() {
+    let inputSize;
+    do {
+        inputSize = prompt("Enter a new size [min 3, max 100]");
+        if (inputSize == null) {
+            inputSize = 16;
+            break;
         }
-
-        function getRandomNumbers(num) {
-            return Math.floor(Math.random() * (num + 1));
+    } while (inputSize * inputSize > 500 );
+    gridSize = inputSize;
+    container.style.gridTemplateColumns = `repeat(${inputSize}, 1fr)`;
+    createDivs();
+}
+function changeDivSquares(divs){
+    divs.forEach(div => {
+        if (isRainbowMode || defMode) {
+            maintainColor(div);
+        } else {
+            div.style.borderStyle = 'none';
         }
-
-        function rgbNumber(item) {
-            const randomNums = "rgb(" + getRandomNumbers(255) + "," + getRandomNumbers(255) + "," + getRandomNumbers(255) + ")";
-            item.style.backgroundColor = randomNums;
+    });
+}
+function divBorder(divs){
+    divs.forEach(div => {
+        if (isRainbowMode || defMode) {
+            maintainColor(div);
+        } else {
+            div.style.borderColor = 'black';
+            div.style.borderStyle = 'solid';
+            div.style.borderWidth = '1px';
         }
+    });
+}
+clearBtn.addEventListener('click', () => {
+    const divs = document.querySelectorAll('.square');
+    clear(divs);
+});
 
-        function changeGrid() {
-            let inputSize;
-            do {
-                inputSize = prompt("Enter a new size [min 3, max 100]");
-                if (inputSize == null) {
-                    inputSize = 16;
-                    break;
-                }
-            } while (inputSize > 100 || inputSize < 3);
+rainbowBtn.addEventListener('click', () => {
+    isRainbowMode = true;
+    defMode = false;
+    eraserMode = false
+});
 
-            gridSize = inputSize;
-
-            container.style.gridTemplateColumns = `repeat(${inputSize}, 1fr)`;
-            createDivs();
-        }
+blackBtn.addEventListener('click', () => {
+    isRainbowMode = false;  
+    defMode = false;
+    eraserMode = false
+});
+eraserBtn.addEventListener('click', () => {
+    isRainbowMode = false;
+    defMode = false;
+    eraserMode = true;
+});
+changeSquaresBtn.addEventListener('click', () => {
+    const divs = document.querySelectorAll('.square');
+    changeDivSquares(divs);
+})
+borderBtn.addEventListener('click', () => {
+    const divs = document.querySelectorAll('.square');
+    divBorder(divs);
+})
     </script>
 </body>
 </html>
