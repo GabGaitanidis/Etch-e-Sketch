@@ -101,7 +101,7 @@ function changeGrid() {
 }
 function changeDivSquares(divs){
     divs.forEach(div => {
-        if (isRainbowMode || defMode) {
+        if (isRainbowMode || defMode || eraserMode) {
             maintainColor(div);
         } else {
             div.style.borderStyle = 'none';
@@ -110,7 +110,7 @@ function changeDivSquares(divs){
 }
 function divBorder(divs){
     divs.forEach(div => {
-        if (isRainbowMode || defMode) {
+        if (isRainbowMode || defMode || eraserMode) {
             maintainColor(div);
         } else {
             div.style.borderColor = 'black';
@@ -141,10 +141,16 @@ eraserBtn.addEventListener('click', () => {
     eraserMode = true;
 });
 changeSquaresBtn.addEventListener('click', () => {
+    defMode = false
+    isRainbowMode = false
+    eraserMode = false
     const divs = document.querySelectorAll('.square');
     changeDivSquares(divs);
 })
 borderBtn.addEventListener('click', () => {
+    defMode = false
+    isRainbowMode = false
+    eraserMode = false
     const divs = document.querySelectorAll('.square');
     divBorder(divs);
 })
