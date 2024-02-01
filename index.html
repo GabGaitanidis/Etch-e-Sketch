@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etch-a-Sketch</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-
-    </style>
 </head>
 <body>
     <nav>
@@ -26,18 +23,17 @@
     </div>
 
     <script>
-        
         const container = document.querySelector('.container-items');
         const clearBtn = document.querySelector('#reset-btn');
         const rainbowBtn = document.querySelector('#rainbow-btn');
         const blackBtn = document.querySelector('#black');
         const eraserBtn = document.querySelector('#eraser');
         const gridInputBtn = document.querySelector('#grid');
-    
 
         let gridSize = 16;
         let isRainbowMode = false;
         let isEraserMode = false;
+        let resetMode = true;
 
         function createDivs() {
             container.innerHTML = '';
@@ -60,18 +56,32 @@
             }
         }
 
+        function updateEventListeners() {
+            const divs = document.querySelectorAll('.square');
+            divs.forEach(squareDiv => {
+                squareDiv.onmouseover = function () {
+                    if (isRainbowMode) {
+                        rgbNumber(squareDiv);
+                    } else if (isEraserMode) {
+                        squareDiv.style.backgroundColor = 'white';
+                    } else {
+                        maintainColor(squareDiv);
+                    }
+                };
+                if (resetMode) {
+                    squareDiv.style.backgroundColor = 'white';
+                }
+            });
+        }
+
         createDivs();
-
-        const divs = document.querySelectorAll('.square');
-
-        gridInputBtn.addEventListener('click', () => {
-            changeGrid();
-        });
+        updateEventListeners();
 
         function clear(div) {
             div.forEach(squareDiv => {
                 squareDiv.style.backgroundColor = 'white';
             });
+            resetMode = true;
         }
 
         function maintainColor(element) {
@@ -99,22 +109,14 @@
             gridSize = inputSize;
             container.style.gridTemplateColumns = `repeat(${inputSize}, 1fr)`;
             createDivs();
-        }
-
-        function changeDivSquares() {
-            divs.forEach(squareDiv => {
-                squareDiv.style.borderStyle = 'none';
-            });
-        }
-
-        function divBorder() {
-            divs.forEach(squareDiv => {
-                squareDiv.style.borderStyle = 'solid';
-            });
+            updateEventListeners();
         }
 
         clearBtn.addEventListener('click', () => {
+            resetMode = true;
+            const divs = document.querySelectorAll('.square');
             clear(divs);
+            updateEventListeners();
         });
 
         rainbowBtn.addEventListener('click', () => {
@@ -131,8 +133,6 @@
             isEraserMode = !isEraserMode;
             isRainbowMode = false; 
         });
-
-
     </script>
 </body>
 </html>
